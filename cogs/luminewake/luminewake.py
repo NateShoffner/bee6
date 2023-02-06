@@ -22,7 +22,7 @@ class LumineWake(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.guild.id != 699424562017730622:
+        if message.guild.id != 553590545801281541:
             return
 
         if message.content.startswith('!wake'):
@@ -38,15 +38,24 @@ class LumineWake(commands.Cog):
 
             if needs_woke:
                 self.logger.info(f'Waking {message.author.display_name} at {now}')
-                await self.send_wake(message.author, message.channel)
+
+                fixed_channel_id = babe_config['channel']
+                channel = self.bot.get_channel(fixed_channel_id) if fixed_channel_id else message.channel
+
+                await self.send_wake(message.author, channel)
                 babe_config['last_wake'] = now.isoformat()
                 save_config(self.config)
 
 
     async def send_wake(self, user: discord.User, channel: discord.TextChannel):
         await channel.typing()
-        # TODO host gifs on a CDN
-        await channel.send(f'{user.mention}', file=discord.File(self.get_gif()))
+
+        if self.cog_config['use_local_gifs']:
+            await channel.send(f'{user.mention}', file=discord.File(self.get_local_gif()))
+        else:
+            bucket_base = 'https://pub-07202295b49f458a8b84424511fa2a13.r2.dev/'
+            url = f'{bucket_base}{datetime.today():%A}.gif'.lower()
+            await channel.send(f'{user.mention} {url}')
 
     def get_babe_config(self, user: discord.User) -> str:
         for babe in self.cog_config['babes']:
@@ -58,7 +67,7 @@ class LumineWake(commands.Cog):
         PST = pytz.timezone('US/Pacific')
         return date.astimezone(PST)
 
-    def get_gif(self):
+    def get_local_gif(self):
         today = datetime.today().strftime('%A')
         cwd = os.path.dirname(os.path.realpath(__file__))
         assets = os.path.join(cwd, 'assets')

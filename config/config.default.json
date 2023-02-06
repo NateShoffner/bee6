@@ -6,6 +6,7 @@
             "api_key": "",
         },
         "luminewake": {
+            "use_local_gifs": true,
             "babes": [
                 {
                     "id": 0,
