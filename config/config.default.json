@@ -1,0 +1,17 @@
+{
+    "debug": true,
+    "bot_token": "",
+    "cogs": {
+        "tldr": {
+            "api_key": "",
+        },
+        "luminewake": {
+            "babes": [
+                {
+                    "id": 0,
+                    "last_wake": null
+                }
+            ]
+        }
+    }
+}
