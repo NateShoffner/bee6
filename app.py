@@ -3,7 +3,7 @@ import discord
 import logging
 import sys
 from cogs.luminewake import LumineWake
-from cogs.tldr.tldr import Summurize
+from cogs.tldr.tldr import Summarize
 from config import load_config
 from discord.ext import commands
 from logging.handlers import TimedRotatingFileHandler
@@ -59,7 +59,7 @@ async def ping(interaction: discord.Interaction):
 
 async def main():
     init_logging()
-    await bot.add_cog(Summurize(bot, user_config, logger))
+    await bot.add_cog(Summarize(bot, user_config, logger))
     await bot.add_cog(LumineWake(bot, user_config, logger))
     await bot.start(user_config['bot_token'])
 

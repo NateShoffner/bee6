@@ -2,7 +2,7 @@ import discord
 import openai
 from discord.ext import commands
 
-class Summurize(commands.Cog):
+class Summarize(commands.Cog):
     
     def __init__(self, bot, config, logger):
         self.bot = bot
@@ -24,7 +24,7 @@ class Summurize(commands.Cog):
 
         referenced_message = await ctx.message.channel.fetch_message(ctx.message.reference.message_id)
 
-        print("Generating Summary...")
+        self.logger.info("Generating Summary...")
         openai.api_key = self.cog_config['api_key']
         response = openai.Completion.create(engine="davinci",prompt=referenced_message.content,temperature=0.3,
                     max_tokens=140,
