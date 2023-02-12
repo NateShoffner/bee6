@@ -21,20 +21,28 @@ class LumineWake(commands.Cog):
         self.logger.info('LumineWake ready')
 
     @commands.Cog.listener()
-    async def on_typing(self, channel: discord.TextChannel, user: discord.User, when: datetime.datetime):
-        if self.config['detect_typing']:
+    async def on_typing(self, channel: discord.TextChannel, user: discord.User, when: datetime):
+        if self.cog_config['detect_typing']:
+            await self.wake_if_needed(user, channel)
+
+    # we have to use the raw variation because the normal one doesn't work for non-cached messages
+    @commands.Cog.listener()
+    async def on_raw_reaction_add (self, payload: discord.RawReactionActionEvent):
+        if self.cog_config['detect_reacts']:
+            channel = self.bot.get_channel(payload.channel_id)
+            user = self.bot.get_user(payload.user_id)
             await self.wake_if_needed(user, channel)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if message.guild.id != 553590545801281541:
+        if message.guild.id != 553590545801281541: # TODO make this configurable
             return
 
         if message.content.startswith('!wake'):
             await self.send_wake(message.author, message.channel)
             return
 
-        await self.wake_if_needed(message)
+        await self.wake_if_needed(message.author, message.channel)
 
     async def wake_if_needed(self, user: discord.User, channel: discord.TextChannel):
         babe_config = self.get_babe_config(user)

@@ -8,6 +8,7 @@
         "luminewake": {
             "use_local_gifs": true,
             "detect_typing": true,
+            "detect_reacts": true,
             "babes": [
                 {
                     "id": 0,
